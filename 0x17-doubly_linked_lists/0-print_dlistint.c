@@ -1,4 +1,7 @@
-
+/*
+ * 0x17. C - Doubly linked lists
+ * task 0
+ */
 #include "lists.h"
 /**
  * print_dlistint - prints all the elements of a dlistint_t list.
