@@ -5,24 +5,58 @@
  * @ht: hash table printer
  * @key: string key
  * @value: string value
- * Return: index of the key.
+ * Return: index of a key.
  */
 int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 {
-	unsigned long int k_indexx;
-	int updated_or_addedd = 0;
+	unsigned long int k_index;
+	int updated_or_added = 0;
 	/*check validation*/
 	if (ht == NULL || key == NULL || key[0] == '\0')
 		return (0);
 
 	/*get index*/
-	k_indexx = key_index((unsigned char *)key, ht->size);
+	k_index = key_index((unsigned char *)key, ht->size);
 
-	updated_or_addedd = update_valuee(ht, key, value, k_indexx);
-	if (updated_or_addedd == 0)
-		updated_or_addedd = add_node_to_hash_table(ht, key, value, k_indexx);
+	updated_or_added = update_value(ht, key, value, k_index);
+	if (updated_or_added == 0)
+		updated_or_added = add_node_to_hash_table(ht, key, value, k_index);
 
-	return (updated_or_addedd);
+	return (updated_or_added);
+}
+
+/**
+ * update_value - updates the value of a node in a hash table
+ *
+ * @ht: pointer to the hash table
+ * @key: key of the node to update
+ * @value: new value to set
+ * @k_index: index of the key in the hash table
+ *
+ * Return: 1 on success, 0 on failure
+ */
+int update_value(hash_table_t *ht, const char *key,
+				 const char *value, unsigned long int k_index)
+{
+	hash_node_t *current;
+
+	if (ht->array[k_index] == NULL)
+		return (0);
+	current = ht->array[k_index];
+
+	while (current)
+	{
+		if (strcmp(current->key, key) == 0)
+		{
+			free(current->value);
+			current->value = strdup(value);
+			if (current->value == NULL)
+				return (0);
+			return (1);
+		}
+		current = current->next;
+	}
+	return (0);
 }
 
 /**
@@ -73,36 +107,4 @@ int add_node_to_hash_table(hash_table_t *ht, const char *key,
 	return (1);
 }
 
-/**
- * update_valuee - updates the value of a node in a hash table
- *
- * @ht: pointer to the hash table
- * @key: key of the node to update
- * @value: new value to set
- * @k_index: index of the key in the hash table
- *
- * Return: 1 on success, 0 on failure
- */
-int update_valuee(hash_table_t *ht, const char *key,
-				 const char *value, unsigned long int k_index)
-{
-	hash_node_t *currentt;
 
-	if (ht->array[k_index] == NULL)
-		return (0);
-	currentt = ht->array[k_index];
-
-	while (currentt)
-	{
-		if (strcmp(currentt->key, key) == 0)
-		{
-			free(currentt->value);
-			currentt->value = strdup(value);
-			if (currentt->value == NULL)
-				return (0);
-			return (1);
-		}
-		currentt = currentt->next;
-	}
-	return (0);
-}
