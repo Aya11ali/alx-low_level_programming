@@ -1,5 +1,10 @@
 #include "hash_tables.h"
 
+/*prototypes*/
+int add_node_to_hash_table(hash_table_t *ht, const char *key,
+						   const char *value, unsigned long int k_index);
+int update_value(hash_table_t *ht, const char *key,
+				 const char *value, unsigned long int k_index);
 /**
  * hash_table_set - add item to hash table
  * @ht: hash table printer
@@ -23,40 +28,6 @@ int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 		updated_or_added = add_node_to_hash_table(ht, key, value, k_index);
 
 	return (updated_or_added);
-}
-
-/**
- * update_value - updates the value of a node in a hash table
- *
- * @ht: pointer to the hash table
- * @key: key of the node to update
- * @value: new value to set
- * @k_index: index of the key in the hash table
- *
- * Return: 1 on success, 0 on failure
- */
-int update_value(hash_table_t *ht, const char *key,
-				 const char *value, unsigned long int k_index)
-{
-	hash_node_t *current;
-
-	if (ht->array[k_index] == NULL)
-		return (0);
-	current = ht->array[k_index];
-
-	while (current)
-	{
-		if (strcmp(current->key, key) == 0)
-		{
-			free(current->value);
-			current->value = strdup(value);
-			if (current->value == NULL)
-				return (0);
-			return (1);
-		}
-		current = current->next;
-	}
-	return (0);
 }
 
 /**
@@ -107,4 +78,36 @@ int add_node_to_hash_table(hash_table_t *ht, const char *key,
 	return (1);
 }
 
+/**
+ * update_value - updates the value of a node in a hash table
+ *
+ * @ht: pointer to the hash table
+ * @key: key of the node to update
+ * @value: new value to set
+ * @k_index: index of the key in the hash table
+ *
+ * Return: 1 on success, 0 on failure
+ */
+int update_value(hash_table_t *ht, const char *key,
+				 const char *value, unsigned long int k_index)
+{
+	hash_node_t *current;
 
+	if (ht->array[k_index] == NULL)
+		return (0);
+	current = ht->array[k_index];
+
+	while (current)
+	{
+		if (strcmp(current->key, key) == 0)
+		{
+			free(current->value);
+			current->value = strdup(value);
+			if (current->value == NULL)
+				return (0);
+			return (1);
+		}
+		current = current->next;
+	}
+	return (0);
+}
